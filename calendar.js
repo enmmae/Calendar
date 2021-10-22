@@ -15,6 +15,7 @@ const days_element = document.querySelector('.calendar .days');
 const items = ['NAUTI', 'MUISTA', 'MOIKKU'];
 const months = ['tammikuu', 'helmikuu', 'maaliskuu', 'huhtikuu', 'toukokuu', 'kesäkuu', 'heinäkuu', 'elokuu', 'syyskuu', 'lokakuu', 'marraskuu', 'joulukuu'];
 const week_days = ['MAANANTAI', 'TIISTAI', 'KESKIVIIKKO', 'TORSTAI', 'PERJANTAI', 'LAUANTAI', 'SUNNUNTAI'];
+const week_text = 'VKO';
 
 let date = new Date();
 let month = date.getMonth();
@@ -112,7 +113,7 @@ function populateDates (e) {
             const week_number_container = document.createElement('div');
             week_number_container.classList.add('weeknumber');
             let startDay = i === 0 ? 1 : i - firstDay + 2;
-            week_number_container.textContent = 'VKO ' + getWeek(new Date(year + '-' + (month+1) + '-' + startDay));
+            week_number_container.textContent = week_text + ' ' + getWeek(new Date(year + '-' + (month+1) + '-' + startDay));
             day_container.appendChild(week_number_container);
         }
 
@@ -153,8 +154,14 @@ function amountOfDays (month, year) {
 }
 
 function getWeek (date) {
-    var onejan = new Date(date.getFullYear(), 0, 1);
+    // Set date to be thursday of current week
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    
+    // January 4th is always in first week
+    var firstWeekOfYear = new Date(date.getFullYear(), 0, 4);
+
+    // Calculate the week number
     var millisecsInDay = 86400000;
-    var minus = date.getDay() === 0 ? 2 : 1;
-    return Math.ceil((((date - onejan) /millisecsInDay) + onejan.getDay()+1)/7) - minus;
+    return 1 + Math.round(((date.getTime() - firstWeekOfYear.getTime()) / millisecsInDay - 3 + (firstWeekOfYear.getDay() + 6) % 7) / 7);
 };
