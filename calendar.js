@@ -1,22 +1,26 @@
+// Month selection
 const mth_element = document.querySelector('.calendar .month .mth');
 const next_mth_element = document.querySelector('.calendar .month .next-mth');
 const prev_mth_element = document.querySelector('.calendar .month .prev-mth');
 const next_year_element = document.querySelector('.calendar .month .next-year');
 const prev_year_element = document.querySelector('.calendar .month .prev-year');
 
+// Calendar
 const number_element = document.querySelector('.calendar .number');
 const heading_element = document.querySelector('.calendar .heading');
 const list_element = document.querySelector('.calendar .list');
 const dots_element = document.querySelector('.calendar .dots');
-
 const week_days_element = document.querySelector('.calendar .week-days');
 const days_element = document.querySelector('.calendar .days');
 
+// Constants
 const items = ['NAUTI', 'MUISTA', 'MOIKKU'];
+const list_lines = 7;
 const months = ['tammikuu', 'helmikuu', 'maaliskuu', 'huhtikuu', 'toukokuu', 'kesäkuu', 'heinäkuu', 'elokuu', 'syyskuu', 'lokakuu', 'marraskuu', 'joulukuu'];
 const week_days = ['MAANANTAI', 'TIISTAI', 'KESKIVIIKKO', 'TORSTAI', 'PERJANTAI', 'LAUANTAI', 'SUNNUNTAI'];
 const week_text = 'VKO';
 
+// Date
 let date = new Date();
 let month = date.getMonth();
 let year = date.getFullYear();
@@ -28,13 +32,19 @@ heading_element.textContent = months[month];
 populateList();
 populateDates();
 
-// EVENT LISTENERS
+/*
+ * EVENT LISTENERS
+ */
+
 next_mth_element.addEventListener('click', goToNextMonth);
 prev_mth_element.addEventListener('click', goToPrevMonth);
 next_year_element.addEventListener('click', goToNextYear);
 prev_year_element.addEventListener('click', goToPrevYear);
 
-// FUNCTIONS
+/*
+ * FUNCTIONS
+ */
+
 function goToNextMonth (e) {
     month++;
     if (month > 11) {
@@ -69,13 +79,14 @@ function setMonthText (e) {
     heading_element.textContent = months[month];
 }
 
+// Populate lists with heading and empty lines
 function populateList (e) {
     for (let j = 0; j < items.length; j++) {
         const list_item = document.createElement('div');
         list_item.classList.add('heading');
         list_item.textContent = items[j];
         list_element.appendChild(list_item);
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < list_lines; i++) {
             const line_element = document.createElement('div');
             line_element.classList.add('line');
             list_element.appendChild(line_element);
@@ -83,6 +94,7 @@ function populateList (e) {
     }
 }
 
+// Populate calendar with week day headings, week numbers and boxes for days
 function populateDates (e) {
     setMonthText();
 
@@ -135,6 +147,7 @@ function populateDates (e) {
 }
 
 function populateDots (empties) {
+    // Populate the same amount of dots with numbers as there are days in current month
     dots_element.querySelectorAll('*').forEach(n => n.remove());
 
     for (let i = 0; i < amountOfDays(month, year) + empties; i++) {
@@ -146,7 +159,10 @@ function populateDots (empties) {
     }
 }
 
-// HELPER FUNCTIONS
+/*
+ * HELPER FUNCTIONS
+ */
+
 function amountOfDays (month, year) {
     const isLeapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0) ? true: false;
     const days_amount = [31, (isLeapYear ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
